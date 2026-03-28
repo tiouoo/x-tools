@@ -48,7 +48,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,svg}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -75,6 +76,17 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /\.woff2$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'font-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+            },
+          },
         ],
       },
     }),
@@ -83,6 +95,25 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vue-vendor': ['vue', 'vue-router', 'pinia'],
+          'antd-vendor': ['ant-design-vue'],
+          'icons-vendor': [
+            '@fortawesome/fontawesome-svg-core',
+            '@fortawesome/free-solid-svg-icons',
+            '@fortawesome/free-brands-svg-icons',
+            '@fortawesome/vue-fontawesome',
+          ],
+          'chart-vendor': ['echarts'],
+          'utils-vendor': ['axios'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
   },
   server: {
     host: '0.0.0.0',
