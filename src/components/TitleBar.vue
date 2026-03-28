@@ -2,6 +2,12 @@
   <div class="container">
     <div class="title">
       <span @click="toHome">Huh</span>
+      <template v-if="currentPath !== '/'">
+        <span class="path-separator">/</span>
+        <span class="page-info"
+          >{{ currentPageTitle }} <span class="real-path">({{ currentPath }})</span></span
+        >
+      </template>
     </div>
     <div class="nav-container">
       <a-menu
@@ -13,15 +19,24 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { navItems } from '@/router/nav.config';
 import type { MenuProps } from 'ant-design-vue';
 import { toggleTheme } from '@/utils/theme';
+import { pageItems } from '@/views/.nav.ts';
 
 const router = useRouter();
+const route = useRoute();
 const current = ref<string[]>([]);
 const items = ref(navItems);
+
+const currentPath = computed(() => route.path);
+
+const currentPageTitle = computed(() => {
+  const page = pageItems.find((item) => item.path === route.path);
+  return page ? page.title : 'NotFound';
+});
 
 const toHome = () => {
   router.push(`/`);
@@ -79,9 +94,28 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
 .title {
   font-size: 18px;
   line-height: 1;
-  margin-top: -3px;
+  margin-top: -1px;
   margin-left: 20px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.path-separator {
+  color: var(--text-color);
+  cursor: default;
+}
+
+.page-info {
+  cursor: default;
+  font-size: 16px;
+}
+
+.real-path {
+  color: var(--text-color-light);
+  font-size: 14px;
+  display: none;
 }
 .nav-container {
   width: 100px;

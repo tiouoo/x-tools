@@ -93,7 +93,7 @@ const navigateTo = (path: string) => {
   border: var(--card-border);
   border-radius: 9999px;
   color: var(--text-color);
-  padding: 4px 16px;
+  padding: 4px 12px;
 }
 
 .search-box :deep(.ant-input-affix-wrapper:focus),
