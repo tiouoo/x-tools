@@ -1,6 +1,7 @@
 interface PageNav {
   title: string;
   path: string;
-  weight: number;
+  weight?: number;
+  description?: string;
 }
 export default PageNav;

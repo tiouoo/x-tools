@@ -4,16 +4,21 @@ export const pageItems: PageNav[] = [
   {
     title: '首页',
     path: '/',
-    weight: 0,
+    description: '网站首页',
   },
   {
     title: '示例页面',
     path: '/example',
-    weight: 1,
+    description: '示例内容展示',
   },
   {
     title: '关于',
     path: '/about',
-    weight: 2,
+    description: '关于本站',
+  },
+  {
+    title: '导航',
+    path: '/nav',
+    description: '页面导航',
   },
 ];
