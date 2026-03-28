@@ -31,4 +31,10 @@ export const pageItems: PageNav[] = [
     description: '随机切换刺眼颜色',
     component: () => import('@/views/page/ColorBlinder.vue'),
   },
+  // {
+  //   title: 'Emoji猜成语',
+  //   path: '/idiom-guess',
+  //   description: '用Emoji表示成语输入文字猜词',
+  //   component: () => import('@/views/page/IdiomGuess.vue'),
+  // },
 ];
