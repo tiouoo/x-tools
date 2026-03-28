@@ -11,14 +11,14 @@
       <div class="controls-row">
         <div class="control-group">
           <label>名字上限</label>
-          <input v-model.number="maxLength" type="number" min="1" max="20" class="length-input" />
+          <input v-model.number="maxLength" type="number" min="1" max="100" class="length-input" />
         </div>
         <button @click="generateName" class="gen-btn">生成随机名</button>
         <button @click="copyName" :disabled="!currentName" class="copy-btn">复制</button>
       </div>
 
       <div class="history-section">
-        <h3>最近生成（最多 20 条）</h3>
+        <h3>最近生成（最多 100 条）</h3>
         <div class="history-list">
           <div
             v-for="(name, index) in history"
@@ -744,7 +744,7 @@ const generateName = () => {
 
   // 添加到历史记录
   history.value.unshift(name);
-  if (history.value.length > 20) {
+  if (history.value.length > 100) {
     history.value.pop();
   }
 };
