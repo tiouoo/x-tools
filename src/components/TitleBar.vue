@@ -51,6 +51,10 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
     toggleTheme();
     return;
   }
+  if (info.key == 'github') {
+    window.open('https://github.com/yiikooo/huh', '_blank');
+    return;
+  }
   if (info.key == '/') {
     router.push(`/`);
     return;
@@ -118,7 +122,7 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
   display: none;
 }
 .nav-container {
-  width: 100px;
+  width: 132px;
   display: flex;
   flex-direction: row-reverse;
 }

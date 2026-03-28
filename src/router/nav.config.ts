@@ -24,6 +24,17 @@ export const navItems = <MenuProps['items']>[
   {
     icon: () =>
       h(FontAwesomeIcon, {
+        icon: ['fab', 'github'],
+        size: '2xs',
+        style: 'top: -1px;position: relative;',
+      }),
+    key: 'github',
+    label: '',
+    title: '',
+  },
+  {
+    icon: () =>
+      h(FontAwesomeIcon, {
         icon: ['fas', 'cloud-sun'],
         size: '2xs',
         style: 'top: -1px;position: relative;',
