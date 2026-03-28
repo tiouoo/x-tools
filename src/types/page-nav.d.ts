@@ -3,5 +3,6 @@ interface PageNav {
   path: string;
   weight?: number;
   description?: string;
+  component: RawRouteComponent;
 }
 export default PageNav;

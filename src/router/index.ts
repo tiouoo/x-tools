@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { pageItems } from '@/views/.nav';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,11 +9,11 @@ const router = createRouter({
       name: 'home',
       component: () => import('../views/PageNav.vue'),
     },
-    {
-      path: '/long-link',
-      name: 'long-link',
-      component: () => import('../views/LongLink.vue'),
-    },
+    ...pageItems.map((item) => ({
+      path: item.path,
+      name: item.path.slice(1),
+      component: item.component,
+    })),
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
