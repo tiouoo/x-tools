@@ -76,13 +76,14 @@ const navigateTo = (path: string) => {
 .title {
   text-align: center;
   margin-bottom: 30px;
+  margin-top: 20px;
   color: var(--text-color);
   font-size: 32px;
 }
 
 .search-box {
   margin-bottom: 30px;
-  max-width: 600px;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -90,8 +91,9 @@ const navigateTo = (path: string) => {
 .search-box :deep(.ant-input-affix-wrapper) {
   background-color: var(--card-bg);
   border: var(--card-border);
-  border-radius: var(--card-radius);
+  border-radius: 9999px;
   color: var(--text-color);
+  padding: 4px 16px;
 }
 
 .search-box :deep(.ant-input-affix-wrapper:focus),
@@ -111,20 +113,25 @@ const navigateTo = (path: string) => {
 .search-box :deep(.ant-input) {
   background-color: transparent;
   color: var(--text-color);
+  font-family: 'ZhuZiAYuanJWD', sans-serif;
+  font-size: 14px;
 }
 
 .search-box :deep(.ant-input::placeholder) {
   color: var(--text-color-light);
+  font-family: 'ZhuZiAYuanJWD', sans-serif;
+  font-size: 14px;
 }
 
 .search-box :deep(.anticon) {
   color: var(--text-color-light);
+  margin-right: 6px;
 }
 
 .nav-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 20px;
 }
 
@@ -132,7 +139,7 @@ const navigateTo = (path: string) => {
   background-color: var(--card-bg);
   border: var(--card-border);
   border-radius: var(--card-radius);
-  padding: 20px;
+  padding: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -145,25 +152,25 @@ const navigateTo = (path: string) => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .nav-card-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: normal;
   color: var(--text-color);
 }
 
 .nav-card-path {
   font-size: 12px;
   color: var(--text-color-light);
-  font-family: monospace;
+  font-family: 'ZhuZiAYuanJWD', sans-serif;
   margin-left: 12px;
   flex-shrink: 0;
 }
 
 .nav-card-desc {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-color-light);
   line-height: 1.5;
 }

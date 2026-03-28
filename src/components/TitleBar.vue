@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <span @click="toHome" class="title">Huh</span>
+    <div class="title">
+      <span @click="toHome">Huh</span>
+    </div>
     <div class="nav-container">
       <a-menu
         v-model:selectedKeys="current"
@@ -70,6 +72,7 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
   background-color: var(--card-bg);
   align-items: center;
   height: 45px;
+  justify-content: space-between;
   border: var(--card-border);
   border-radius: var(--card-radius);
 }
@@ -81,8 +84,7 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
   cursor: pointer;
 }
 .nav-container {
-  width: calc(100% - 60px);
-
+  width: 100px;
   display: flex;
   flex-direction: row-reverse;
 }
