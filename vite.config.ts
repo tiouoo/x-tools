@@ -4,16 +4,24 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { VitePWA } from 'vite-plugin-pwa';
+import { generateSitemapRssPlugin } from './scripts/generate-sitemap-rss';
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
+    generateSitemapRssPlugin({
+      siteUrl: 'https://huh.yik.at', // 请根据实际域名修改
+      siteName: 'Huh',
+      siteDescription: 'huh',
+      author: 'Yik',
+      language: 'zh-CN',
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: {
-        enabled: true,
+        enabled: false,
         type: 'module',
       },
       includeAssets: ['favicon.ico', 'icon-192.png', 'icon-512.png', 'BingSiteAuth.xml'],
