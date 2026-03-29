@@ -49,9 +49,11 @@
             type="text"
             v-model="pathTemplate"
             placeholder="例如: uploads/{year}/{month}/{filename}"
-            class="x-input" />
+            class="x-input"
+            @input="saveToLocalStorage" />
           <span class="hint"
-            >支持占位符: {year} {month} {day} {timestamp} {filename} {name} {ext}</span
+            >支持占位符: {year} {month} {day} {hour} {minute} {second} {timestamp} {filename} {name}
+            {ext}</span
           >
         </div>
 
@@ -59,6 +61,9 @@
           <div class="placeholder-item"><code>{year}</code> - 年份 (2024)</div>
           <div class="placeholder-item"><code>{month}</code> - 月份 (01-12)</div>
           <div class="placeholder-item"><code>{day}</code> - 日期 (01-31)</div>
+          <div class="placeholder-item"><code>{hour}</code> - 小时 (00-23)</div>
+          <div class="placeholder-item"><code>{minute}</code> - 分钟 (00-59)</div>
+          <div class="placeholder-item"><code>{second}</code> - 秒 (00-59)</div>
           <div class="placeholder-item"><code>{timestamp}</code> - 时间戳</div>
           <div class="placeholder-item"><code>{filename}</code> - 完整文件名</div>
           <div class="placeholder-item"><code>{name}</code> - 文件名(无扩展名)</div>
@@ -71,7 +76,8 @@
             type="text"
             v-model="commitMessage"
             placeholder="例如: Upload {filename}"
-            class="x-input" />
+            class="x-input"
+            @input="saveToLocalStorage" />
           <span class="hint">支持相同的占位符</span>
         </div>
 
@@ -79,17 +85,37 @@
           <div class="control-item switch-item">
             <label>自动生成 CDN 链接</label>
             <label class="switch">
-              <input type="checkbox" v-model="generateCdnLink" />
+              <input type="checkbox" v-model="generateCdnLink" @change="saveToLocalStorage" />
               <span class="slider"></span>
             </label>
           </div>
+        </div>
+
+        <div class="control-item">
+          <label>自定义 CDN 地址模板（可选）</label>
+          <input
+            type="text"
+            v-model="customCdnTemplate"
+            placeholder="例如: https://cdn.example.com/{repo}/{branch}/{path}"
+            class="x-input"
+            @input="saveToLocalStorage" />
+          <span class="hint">支持占位符: {repo} {branch} {path} {filename} {name} {ext}</span>
+        </div>
+
+        <div class="placeholder-help">
+          <div class="placeholder-item"><code>{repo}</code> - 仓库名</div>
+          <div class="placeholder-item"><code>{branch}</code> - 分支名</div>
+          <div class="placeholder-item"><code>{path}</code> - 文件完整路径</div>
+          <div class="placeholder-item"><code>{filename}</code> - 完整文件名</div>
+          <div class="placeholder-item"><code>{name}</code> - 文件名(无扩展名)</div>
+          <div class="placeholder-item"><code>{ext}</code> - 扩展名</div>
         </div>
 
         <div class="control-row">
           <div class="control-item switch-item">
             <label>文件名转小写</label>
             <label class="switch">
-              <input type="checkbox" v-model="lowercaseFilename" />
+              <input type="checkbox" v-model="lowercaseFilename" @change="saveToLocalStorage" />
               <span class="slider"></span>
             </label>
           </div>
@@ -99,7 +125,7 @@
           <div class="control-item switch-item">
             <label>替换空格为连字符</label>
             <label class="switch">
-              <input type="checkbox" v-model="replaceSpaces" />
+              <input type="checkbox" v-model="replaceSpaces" @change="saveToLocalStorage" />
               <span class="slider"></span>
             </label>
           </div>
@@ -163,9 +189,10 @@
               <div v-if="result.cdnUrl" class="result-link">
                 <strong>CDN:</strong>
                 <a :href="result.cdnUrl" target="_blank">{{ result.cdnUrl }}</a>
-                <button @click="copyToClipboard(result.cdnUrl)" class="x-btn copy-btn-small">
-                  📋
-                </button>
+              </div>
+              <div v-if="result.customCdnUrl" class="result-link">
+                <strong>自定义 CDN:</strong>
+                <a :href="result.customCdnUrl" target="_blank">{{ result.customCdnUrl }}</a>
               </div>
             </div>
             <div v-else class="error-message">{{ result.error }}</div>
@@ -189,6 +216,7 @@ const branch = ref('main');
 const pathTemplate = ref('uploads/{year}/{month}/{day}/{filename}');
 const commitMessage = ref('Upload {filename}');
 const generateCdnLink = ref(true);
+const customCdnTemplate = ref('');
 const lowercaseFilename = ref(false);
 const replaceSpaces = ref(true);
 const loading = ref(false);
@@ -201,6 +229,7 @@ interface UploadResult {
   success: boolean;
   url?: string;
   cdnUrl?: string;
+  customCdnUrl?: string;
   error?: string;
 }
 
@@ -216,6 +245,14 @@ onMounted(() => {
       githubToken.value = savedConfig.githubToken || '';
       repoName.value = savedConfig.repoName || '';
       branch.value = savedConfig.branch || 'main';
+      customCdnTemplate.value = savedConfig.customCdnTemplate || '';
+      pathTemplate.value = savedConfig.pathTemplate || 'uploads/{year}/{month}/{day}/{filename}';
+      commitMessage.value = savedConfig.commitMessage || 'Upload {filename}';
+      generateCdnLink.value =
+        savedConfig.generateCdnLink !== undefined ? savedConfig.generateCdnLink : true;
+      lowercaseFilename.value = savedConfig.lowercaseFilename || false;
+      replaceSpaces.value =
+        savedConfig.replaceSpaces !== undefined ? savedConfig.replaceSpaces : true;
     }
   } catch (e) {
     console.error('Failed to load config:', e);
@@ -230,6 +267,12 @@ const saveToLocalStorage = () => {
         githubToken: githubToken.value,
         repoName: repoName.value,
         branch: branch.value,
+        customCdnTemplate: customCdnTemplate.value,
+        pathTemplate: pathTemplate.value,
+        commitMessage: commitMessage.value,
+        generateCdnLink: generateCdnLink.value,
+        lowercaseFilename: lowercaseFilename.value,
+        replaceSpaces: replaceSpaces.value,
       })
     );
   } catch (e) {
@@ -290,6 +333,25 @@ const processFilename = (filename: string): string => {
   return processed;
 };
 
+const generateCustomCdnUrl = (filePath: string, filename: string): string => {
+  if (!customCdnTemplate.value.trim()) {
+    return '';
+  }
+
+  const nameWithoutExt = filename.substring(0, filename.lastIndexOf('.')) || filename;
+  const ext = filename.includes('.') ? filename.substring(filename.lastIndexOf('.') + 1) : '';
+
+  let url = customCdnTemplate.value;
+  url = url.replace(/{repo}/g, repoName.value.trim());
+  url = url.replace(/{branch}/g, branch.value.trim() || 'main');
+  url = url.replace(/{path}/g, filePath);
+  url = url.replace(/{filename}/g, filename);
+  url = url.replace(/{name}/g, nameWithoutExt);
+  url = url.replace(/{ext}/g, ext);
+
+  return url;
+};
+
 const uploadFiles = async () => {
   if (!githubToken.value.trim()) {
     message.warning('请输入 GitHub Token');
@@ -319,6 +381,33 @@ const uploadFiles = async () => {
       const base64Content = fileContent.split(',')[1];
       const processedFilename = processFilename(file.name);
 
+      // 计算文件路径用于自定义 CDN
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hour = String(now.getHours()).padStart(2, '0');
+      const minute = String(now.getMinutes()).padStart(2, '0');
+      const second = String(now.getSeconds()).padStart(2, '0');
+      const timestamp = now.getTime();
+      const nameWithoutExt =
+        processedFilename.substring(0, processedFilename.lastIndexOf('.')) || processedFilename;
+      const ext = processedFilename.includes('.')
+        ? processedFilename.substring(processedFilename.lastIndexOf('.') + 1)
+        : '';
+
+      let filePath = pathTemplate.value.trim();
+      filePath = filePath.replace(/{year}/g, String(year));
+      filePath = filePath.replace(/{month}/g, month);
+      filePath = filePath.replace(/{day}/g, day);
+      filePath = filePath.replace(/{hour}/g, hour);
+      filePath = filePath.replace(/{minute}/g, minute);
+      filePath = filePath.replace(/{second}/g, second);
+      filePath = filePath.replace(/{timestamp}/g, String(timestamp));
+      filePath = filePath.replace(/{filename}/g, processedFilename);
+      filePath = filePath.replace(/{name}/g, nameWithoutExt);
+      filePath = filePath.replace(/{ext}/g, ext);
+
       const response = await axios.post(`${config.api}/api/github/upload`, {
         token: githubToken.value.trim(),
         repo: repoName.value.trim(),
@@ -331,16 +420,22 @@ const uploadFiles = async () => {
       });
 
       if (response.data.success) {
+        const customCdn = generateCustomCdnUrl(
+          response.data.data.path || filePath,
+          processedFilename
+        );
+
         uploadResults.value.push({
           filename: file.name,
           success: true,
           url: response.data.data.url,
           cdnUrl: response.data.data.cdnUrl,
+          customCdnUrl: customCdn || undefined,
         });
       } else {
         throw new Error(response.data.error || '上传失败');
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMsg = error.response?.data?.error || error.message || '上传失败';
       uploadResults.value.push({
@@ -361,15 +456,6 @@ const uploadFiles = async () => {
     selectedFiles.value = [];
   } else {
     message.warning(`上传完成：${successCount} 成功，${failCount} 失败`);
-  }
-};
-
-const copyToClipboard = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    message.success('已复制到剪贴板');
-  } catch {
-    message.error('复制失败');
   }
 };
 
@@ -565,7 +651,6 @@ input:checked + .slider:before {
   color: #4338ca;
   padding: 2px 6px;
   border-radius: 4px;
-  font-family: 'Courier New', monospace;
   font-size: 11px;
 }
 
@@ -728,14 +813,18 @@ input:checked + .slider:before {
 
 .result-filename {
   font-size: 14px;
-  font-weight: 500;
   color: var(--text-color, #0f172a);
 }
 
 .result-content {
   font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: -5px;
 }
-
+strong {
+  color: var(--text-color);
+  font-weight: 100;
+}
 .result-link {
   display: flex;
   align-items: center;
@@ -755,12 +844,6 @@ input:checked + .slider:before {
 
 [data-theme='dark'] .result-link a {
   color: #a78bfa;
-}
-
-.copy-btn-small {
-  padding: 2px 6px;
-  font-size: 12px;
-  min-width: auto;
 }
 
 .error-message {
