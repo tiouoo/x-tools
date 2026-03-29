@@ -4,7 +4,7 @@ import 'ant-design-vue/dist/reset.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import Antd from 'ant-design-vue';
+import Antd, { message } from 'ant-design-vue';
 import App from './App.vue';
 import router from './router';
 import { toggleTheme, setTheme, isDark } from './utils/theme';
@@ -33,6 +33,10 @@ app.component('font-awesome-layers-text', FontAwesomeLayersText);
 
 app.use(createPinia());
 app.use(router);
+
+message.config({
+  maxCount: 2,
+});
 
 app.use(Antd).mount('#app');
 
