@@ -31,4 +31,10 @@ export const pageItems: PageNav[] = [
     description: '生成网易我的世界中国版风格的随机名字',
     component: () => import('@/views/page/MinecraftName.vue'),
   },
+  {
+    title: 'GitHub 文件上传',
+    path: '/github-upload',
+    description: '上传文件到 GitHub 仓库',
+    component: () => import('@/views/page/GithubUpload.vue'),
+  },
 ];
