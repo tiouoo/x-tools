@@ -13,4 +13,10 @@ export const pageItems: PageNav[] = [
     description: '随机数生成器',
     component: () => import('@/views/page/RandomNumber.vue'),
   },
+  {
+    title: 'Cloudflare DNS',
+    path: '/cloudflare-dns',
+    description: 'Cloudflare CNAME 记录管理',
+    component: () => import('@/views/page/CloudflareDNS.vue'),
+  },
 ];
