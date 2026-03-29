@@ -2,7 +2,7 @@
   <div class="c">
     <div class="cc">
       <h1>404 NotFound</h1>
-      <button class="btn" @click="toHome">← 返回首页</button>
+      <button class="x-btn" @click="toHome">← 返回首页</button>
     </div>
   </div>
 </template>
@@ -16,19 +16,6 @@ const toHome = () => {
 };
 </script>
 <style scoped>
-.btn {
-  color: var(--text-color);
-  display: flex;
-  background-color: var(--card-bg);
-  align-items: center;
-  border: var(--card-border);
-  border-radius: var(--card-radius);
-  padding: 10px 14px;
-  cursor: pointer;
-}
-.btn:hover {
-  background-color: var(--card-bg-hover);
-}
 .c {
   display: flex;
   align-items: center;

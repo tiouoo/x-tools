@@ -19,7 +19,7 @@
           <label>HEX</label>
           <div class="format-value">
             <input type="text" :value="formats.hex" readonly @click="copyFormat(formats.hex)" />
-            <button @click="copyFormat(formats.hex)" class="copy-icon">📋</button>
+            <button @click="copyFormat(formats.hex)" class="x-btn copy-btn">📋</button>
           </div>
         </div>
 
@@ -27,7 +27,7 @@
           <label>RGB</label>
           <div class="format-value">
             <input type="text" :value="formats.rgb" readonly @click="copyFormat(formats.rgb)" />
-            <button @click="copyFormat(formats.rgb)" class="copy-icon">📋</button>
+            <button @click="copyFormat(formats.rgb)" class="x-btn copy-btn">📋</button>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
           <label>RGBA</label>
           <div class="format-value">
             <input type="text" :value="formats.rgba" readonly @click="copyFormat(formats.rgba)" />
-            <button @click="copyFormat(formats.rgba)" class="copy-icon">📋</button>
+            <button @click="copyFormat(formats.rgba)" class="x-btn copy-btn">📋</button>
           </div>
         </div>
 
@@ -43,7 +43,7 @@
           <label>HSL</label>
           <div class="format-value">
             <input type="text" :value="formats.hsl" readonly @click="copyFormat(formats.hsl)" />
-            <button @click="copyFormat(formats.hsl)" class="copy-icon">📋</button>
+            <button @click="copyFormat(formats.hsl)" class="x-btn copy-btn">📋</button>
           </div>
         </div>
 
@@ -51,7 +51,7 @@
           <label>HSLA</label>
           <div class="format-value">
             <input type="text" :value="formats.hsla" readonly @click="copyFormat(formats.hsla)" />
-            <button @click="copyFormat(formats.hsla)" class="copy-icon">📋</button>
+            <button @click="copyFormat(formats.hsla)" class="x-btn copy-btn">📋</button>
           </div>
         </div>
       </div>
@@ -61,9 +61,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { message } from 'ant-design-vue';
 
 const colorValue = ref('#667eea');
-const pasteMessage = ref('');
 const colorPickerRef = ref<HTMLInputElement | null>(null);
 
 interface ColorFormats {
@@ -89,7 +89,7 @@ const formats = computed<ColorFormats>(() => {
 });
 
 const updateColor = () => {
-  showMessage('颜色已更新');
+  // 颜色更新时不显示提示
 };
 
 const triggerColorPicker = () => {
@@ -165,9 +165,9 @@ const handlePaste = async (e: ClipboardEvent) => {
   const parsedColor = parseColorFromText(text);
   if (parsedColor) {
     colorValue.value = parsedColor;
-    showMessage(`✓ 已识别颜色: ${text}`);
+    message.success(`已识别颜色: ${text}`);
   } else {
-    showMessage('✗ 未识别到有效的颜色格式');
+    message.warning('未识别到有效的颜色格式');
   }
 };
 
@@ -178,17 +178,10 @@ const handleGlobalPaste = (e: ClipboardEvent) => {
 const copyFormat = async (value: string) => {
   try {
     await navigator.clipboard.writeText(value);
-    showMessage(`✓ 已复制: ${value}`);
+    message.success(`已复制: ${value}`);
   } catch {
-    showMessage('复制失败');
+    message.error('复制失败');
   }
-};
-
-const showMessage = (msg: string) => {
-  pasteMessage.value = msg;
-  setTimeout(() => {
-    pasteMessage.value = '';
-  }, 2000);
 };
 
 // 颜色转换函数
@@ -308,7 +301,8 @@ onUnmounted(() => {
   max-width: 760px;
   background: var(--card-bg, #fff);
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
+  border: var(--card-border);
+  /* box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06); */
   padding: 28px;
   margin-bottom: 55px;
 }
@@ -348,7 +342,9 @@ h1 {
   background: #1e293b;
   border-color: #334155;
 }
-
+label {
+  margin-left: 5px;
+}
 [data-theme='dark'] .picker-container:hover {
   /* border-color: #764ba2; */
 }
@@ -418,7 +414,7 @@ h1 {
   flex: 1;
   padding: 10px 14px;
   border: 1px solid #e6e9ef;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 14px;
   /* font-family: 'Courier New', monospace; */
   background: var(--card-bg, #fff);
@@ -428,8 +424,8 @@ h1 {
 }
 
 .format-value input:hover {
-  border-color: #667eea;
-  background: #f8fafc;
+  /* border-color: #667eea; */
+  background: var(--card-bg-hover);
 }
 
 .format-value input:focus {
@@ -441,29 +437,7 @@ h1 {
   border-color: #334155;
 }
 
-[data-theme='dark'] .format-value input:hover {
-  border-color: #764ba2;
-  background: #1e293b;
-}
-
-.copy-icon {
-  padding: 10px 14px;
-  background: #667eea;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.2s;
-  min-width: 48px;
-}
-
-.copy-icon:hover {
-  background: #5568d3;
-  /* transform: scale(1.05); */
-}
-
-.copy-icon:active {
-  transform: scale(0.95);
+.copy-btn {
+  display: none;
 }
 </style>

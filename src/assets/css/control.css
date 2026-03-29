@@ -1,0 +1,13 @@
+.x-btn {
+  color: var(--text-color);
+  display: flex;
+  background-color: var(--card-bg);
+  align-items: center;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.x-btn:hover {
+  background-color: var(--card-bg-hover);
+}
