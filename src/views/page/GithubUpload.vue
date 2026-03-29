@@ -824,6 +824,7 @@ input:checked + .slider:before {
 strong {
   color: var(--text-color);
   font-weight: 100;
+  text-wrap-mode: nowrap;
 }
 .result-link {
   display: flex;
