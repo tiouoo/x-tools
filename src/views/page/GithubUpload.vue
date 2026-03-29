@@ -632,7 +632,7 @@ input:checked + .slider:before {
   gap: 8px;
   padding: 12px;
   background: #f8fafc;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid #eef2f6;
 }
 
@@ -722,7 +722,7 @@ input:checked + .slider:before {
   justify-content: space-between;
   padding: 12px;
   background: #f8fafc;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid #eef2f6;
 }
 
