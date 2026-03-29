@@ -352,6 +352,32 @@ const generateCustomCdnUrl = (filePath: string, filename: string): string => {
   return url;
 };
 
+const replacePlaceholders = (template: string, filename: string): string => {
+  const now = new Date();
+  const year = String(now.getFullYear());
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hour = String(now.getHours()).padStart(2, '0');
+  const minute = String(now.getMinutes()).padStart(2, '0');
+  const second = String(now.getSeconds()).padStart(2, '0');
+  const timestamp = String(now.getTime());
+
+  const nameWithoutExt = filename.substring(0, filename.lastIndexOf('.')) || filename;
+  const ext = filename.includes('.') ? filename.substring(filename.lastIndexOf('.') + 1) : '';
+
+  return template
+    .replace(/{year}/g, year)
+    .replace(/{month}/g, month)
+    .replace(/{day}/g, day)
+    .replace(/{hour}/g, hour)
+    .replace(/{minute}/g, minute)
+    .replace(/{second}/g, second)
+    .replace(/{timestamp}/g, timestamp)
+    .replace(/{filename}/g, filename)
+    .replace(/{name}/g, nameWithoutExt)
+    .replace(/{ext}/g, ext);
+};
+
 const uploadFiles = async () => {
   if (!githubToken.value.trim()) {
     message.warning('请输入 GitHub Token');
@@ -381,40 +407,22 @@ const uploadFiles = async () => {
       const base64Content = fileContent.split(',')[1];
       const processedFilename = processFilename(file.name);
 
-      // 计算文件路径用于自定义 CDN
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hour = String(now.getHours()).padStart(2, '0');
-      const minute = String(now.getMinutes()).padStart(2, '0');
-      const second = String(now.getSeconds()).padStart(2, '0');
-      const timestamp = now.getTime();
-      const nameWithoutExt =
-        processedFilename.substring(0, processedFilename.lastIndexOf('.')) || processedFilename;
-      const ext = processedFilename.includes('.')
-        ? processedFilename.substring(processedFilename.lastIndexOf('.') + 1)
-        : '';
-
-      let filePath = pathTemplate.value.trim();
-      filePath = filePath.replace(/{year}/g, String(year));
-      filePath = filePath.replace(/{month}/g, month);
-      filePath = filePath.replace(/{day}/g, day);
-      filePath = filePath.replace(/{hour}/g, hour);
-      filePath = filePath.replace(/{minute}/g, minute);
-      filePath = filePath.replace(/{second}/g, second);
-      filePath = filePath.replace(/{timestamp}/g, String(timestamp));
-      filePath = filePath.replace(/{filename}/g, processedFilename);
-      filePath = filePath.replace(/{name}/g, nameWithoutExt);
-      filePath = filePath.replace(/{ext}/g, ext);
+      // 在前端计算完整的文件路径和 commit 消息
+      const filePath = replacePlaceholders(
+        pathTemplate.value.trim() || processedFilename,
+        processedFilename
+      );
+      const message = replacePlaceholders(
+        commitMessage.value.trim() || `Upload ${processedFilename}`,
+        processedFilename
+      );
 
       const response = await axios.post(`${config.api}/api/github/upload`, {
         token: githubToken.value.trim(),
         repo: repoName.value.trim(),
         branch: branch.value.trim() || 'main',
-        pathTemplate: pathTemplate.value.trim(),
-        commitMessage: commitMessage.value.trim(),
-        filename: processedFilename,
+        path: filePath,
+        message: message,
         content: base64Content,
         generateCdnLink: generateCdnLink.value,
       });
