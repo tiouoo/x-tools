@@ -9,10 +9,11 @@
   "scripts": {
     "dev": "vite",
     "c": "npm run lint && npm run format",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-p type-check \"build-only {@}\" -- && npm run generate-seo",
     "preview": "vite preview",
     "p": "npm run build && npm run preview",
     "build-only": "vite build",
+    "generate-seo": "jiti scripts/generate-seo.ts",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
