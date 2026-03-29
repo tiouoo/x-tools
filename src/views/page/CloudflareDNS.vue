@@ -243,7 +243,6 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-left: 5px;
-  font-weight: 600;
 }
 
 .hint {

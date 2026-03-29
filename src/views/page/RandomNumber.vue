@@ -5,12 +5,12 @@
       <p class="lead">设置范围和选项，生成随机数</p>
 
       <div class="controls">
-        <div class="control-row">
-          <div class="control-item">
+        <div class="control-row input-c">
+          <div class="control-item input-i">
             <label>最小值</label>
             <input type="number" v-model.number="minValue" class="x-input" />
           </div>
-          <div class="control-item">
+          <div class="control-item input-i">
             <label>最大值</label>
             <input type="number" v-model.number="maxValue" class="x-input" />
           </div>
@@ -52,7 +52,7 @@
           <span v-if="history.length > 0">{{ history.join(' ') }}</span>
           <span v-else class="placeholder">生成结果将显示在这里</span>
         </div>
-        <button @click="clearHistory" class="x-btn clear-btn" :disabled="history.length === 0">
+        <button @click="clearHistory" class="x-e-btn clear-btn" :disabled="history.length === 0">
           清空历史
         </button>
       </div>
@@ -161,6 +161,16 @@ h2 {
   font-size: 14px;
 }
 
+@media (max-width: 560px) {
+  .input-c {
+    flex-direction: column;
+  }
+  .input-i {
+    width: 100%;
+  }
+}
+screen {
+}
 .controls {
   display: flex;
   flex-direction: column;
@@ -304,21 +314,9 @@ input:checked + .slider:before {
 
 .clear-btn {
   padding: 8px 16px;
-  background: #ef4444;
-  color: white;
   border: none;
-  border-radius: 12px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
-}
-
-.clear-btn:hover:not(:disabled) {
-  background: #dc2626;
-}
-
-.clear-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 </style>

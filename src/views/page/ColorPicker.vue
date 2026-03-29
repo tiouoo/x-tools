@@ -398,7 +398,6 @@ label {
 
 .format-item label {
   font-size: 12px;
-  font-weight: 600;
   color: var(--text-color-light, #6b7280);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -408,33 +407,6 @@ label {
   display: flex;
   gap: 8px;
   align-items: center;
-}
-
-.format-value input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid #e6e9ef;
-  border-radius: 12px;
-  font-size: 14px;
-  /* font-family: 'Courier New', monospace; */
-  background: var(--card-bg, #fff);
-  color: var(--text-color, #0f172a);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.format-value input:hover {
-  /* border-color: #667eea; */
-  background: var(--card-bg-hover);
-}
-
-.format-value input:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-[data-theme='dark'] .format-value input {
-  border-color: #334155;
 }
 
 .copy-btn {
