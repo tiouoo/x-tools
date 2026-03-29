@@ -52,7 +52,9 @@
           <span v-if="history.length > 0">{{ history.join(' ') }}</span>
           <span v-else class="placeholder">生成结果将显示在这里</span>
         </div>
-        <button @click="clearHistory" class="x-btn clear-btn" :disabled="history.length === 0">清空历史</button>
+        <button @click="clearHistory" class="x-btn clear-btn" :disabled="history.length === 0">
+          清空历史
+        </button>
       </div>
     </div>
   </div>
@@ -124,7 +126,7 @@ const clearHistory = () => {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   padding: 20px;
   overflow: auto;
 }
@@ -269,7 +271,6 @@ input:checked + .slider:before {
   padding-left: 16px;
   font-size: 15px;
 }
-
 
 .result-section {
   padding-top: 24px;
