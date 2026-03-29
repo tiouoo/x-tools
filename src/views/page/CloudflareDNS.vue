@@ -74,6 +74,7 @@
 import { ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
+import config from '@/config';
 
 const apiToken = ref('');
 const zoneId = ref('');
@@ -133,27 +134,19 @@ const addCNAME = async () => {
   result.value = null;
 
   try {
-    const response = await axios.post(
-      `https://api.cloudflare.com/client/v4/zones/${zoneId.value}/dns_records`,
-      {
-        type: 'CNAME',
-        name: recordName.value.trim() || '@',
-        content: recordContent.value.trim(),
-        ttl: 1, // 自动
-        proxied: proxied.value,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken.value}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await axios.post(`${config.api}/api/cloudflare/dns/cname`, {
+      apiToken: apiToken.value.trim(),
+      zoneId: zoneId.value.trim(),
+      name: recordName.value.trim() || '@',
+      content: recordContent.value.trim(),
+      proxied: proxied.value,
+    });
 
     if (response.data.success) {
+      const data = response.data.data;
       result.value = {
         success: true,
-        message: `✅ CNAME 记录添加成功！\n\n记录 ID: ${response.data.result.id}\n名称: ${response.data.result.name}\n内容: ${response.data.result.content}\n代理状态: ${response.data.result.proxied ? '已启用' : '仅 DNS'}`,
+        message: `✅ CNAME 记录添加成功！\n\n记录 ID: ${data.id}\n名称: ${data.name}\n内容: ${data.content}\n代理状态: ${data.proxied ? '已启用' : '仅 DNS'}`,
       };
       message.success('CNAME 记录添加成功');
 
@@ -161,12 +154,11 @@ const addCNAME = async () => {
       recordName.value = '';
       recordContent.value = '';
     } else {
-      throw new Error(response.data.errors?.[0]?.message || '未知错误');
+      throw new Error(response.data.error || '未知错误');
     }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.errors?.[0]?.message || error.message || '添加失败，请检查配置';
+    const errorMsg = error.response?.data?.error || error.message || '添加失败，请检查配置';
 
     result.value = {
       success: false,
