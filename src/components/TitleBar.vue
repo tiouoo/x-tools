@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title">
-      <span @click="toHome">Huh</span>
+      <span @click="toHome">X</span>
       <template v-if="currentPath !== '/'">
         <span class="path-separator">/</span>
         <span class="page-info"
@@ -52,7 +52,7 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
     return;
   }
   if (info.key == 'github') {
-    window.open('https://github.com/yiikooo/huh', '_blank');
+    window.open('https://github.com/yiikooo/x', '_blank');
     return;
   }
   if (info.key == '/') {

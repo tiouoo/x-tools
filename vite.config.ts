@@ -18,9 +18,9 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'icon-192.png', 'icon-512.png', 'BingSiteAuth.xml'],
       manifest: {
-        name: 'Huh',
-        short_name: 'Huh',
-        description: 'Huh',
+        name: 'x',
+        short_name: 'x',
+        description: 'x',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
