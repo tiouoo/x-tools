@@ -52,7 +52,7 @@ const handleMenuClick: MenuProps['onClick'] = (info) => {
     return;
   }
   if (info.key == 'github') {
-    window.open('https://github.com/yiikooo/x', '_blank');
+    window.open('https://github.com/tiouo', '_blank');
     return;
   }
   if (info.key == '/') {
