@@ -1,6 +1,6 @@
 <template>
   <div class="page-nav-container">
-    <h1 class="title">x.yik.at</h1>
+    <h1 class="title">x.tio.ooo</h1>
 
     <div class="search-box">
       <a-input
@@ -111,7 +111,7 @@ const navigateTo = (path: string) => {
 }
 
 .search-box :deep(.ant-input) {
-  background-color: transparent;
+  background-color: transparent !important;
   color: var(--text-color);
   font-family: 'ZhuZiAYuanJWD', sans-serif;
   font-size: 14px;
