@@ -26,6 +26,12 @@ export const pageItems: PageNav[] = [
     component: () => import('@/views/page/LongLink.vue'),
   },
   {
+    title: 'Whois 查询',
+    path: '/whois',
+    description: '查询域名归属信息',
+    component: () => import('@/views/page/WhoisQuery.vue'),
+  },
+  {
     title: '网易我的世界随机名',
     path: '/wy-mc-name',
     description: '生成网易我的世界中国版风格的随机名字',
