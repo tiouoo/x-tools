@@ -5,9 +5,9 @@ import { pageItems } from '../src/views/.nav.ts';
 // 配置信息
 const config = {
   siteUrl: 'https://x.yik.at',
-  siteName: 'X',
-  siteDescription: 'X',
-  author: 'X',
+  siteName: 'tiouo.x-tools',
+  siteDescription: 'X 工具集是一个集合了颜色选取、随机数生成、Cloudflare DNS 管理、长链接生成、Whois 查询、网易我的世界随机名生成、GitHub 文件上传等多种实用在线工具的平台，为用户提供便捷的工具服务。',
+  author: 'tiouo',
   language: 'zh-CN',
 };
 
