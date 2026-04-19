@@ -134,7 +134,7 @@ const addCNAME = async () => {
   result.value = null;
 
   try {
-    const response = await axios.post(`${config.api}/api/cloudflare/dns/cname`, {
+    const response = await axios.post(`https://api.tio.ooo/api/cloudflare/dns/cname`, {
       apiToken: apiToken.value.trim(),
       zoneId: zoneId.value.trim(),
       name: recordName.value.trim() || '@',
