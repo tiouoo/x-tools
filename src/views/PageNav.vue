@@ -1,6 +1,6 @@
 <template>
   <div class="page-nav-container">
-    <h1 class="title">x.tio.ooo</h1>
+    <h1 class="title">x.tiouo.xyz</h1>
 
     <div class="search-box">
       <a-input

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长链接生成器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --card-bg: #fff;
+            --card-border: 1px solid #e2e8f0;
+            --text-color: #0f172a;
+            --text-color-light: #6b7280;
+        }
+
+        [data-theme='dark'] {
+            --card-bg: #0f172a;
+            --card-border: 1px solid #334155;
+            --text-color: #e2e8f0;
+            --text-color-light: #94a3b8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        [data-theme='dark'] body {
+            background-color: #0f172a;
+        }
+
+        .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 760px;
+            background: var(--card-bg, #fff);
+            border-radius: 12px;
+            border: var(--card-border);
+            padding: 28px;
+            margin-bottom: 55px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 20px;
+            color: var(--text-color, #0f172a);
+        }
+
+        .lead {
+            margin: 0 0 18px;
+            color: var(--text-color-light, #6b7280);
+            font-size: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .url-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .url-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        [data-theme='dark'] .url-input {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        [data-theme='dark'] .url-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        .x-a-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .x-a-btn:hover {
+            background: #2563eb;
+        }
+
+        .secondary.x-s-btn {
+            background: #f1f5f9;
+            color: #334155;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .secondary.x-s-btn:hover {
+            background: #e2e8f0;
+        }
+
+        [data-theme='dark'] button.secondary {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        [data-theme='dark'] button.secondary:hover {
+            background: #334155;
+        }
+
+        .error {
+            margin: 10px 0 0;
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+        .out {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #eef2f6;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        [data-theme='dark'] .out {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .out-link {
+            border: 0;
+            background: transparent;
+            flex: 1;
+            font-size: 14px;
+            color: #064e3b;
+            outline: none;
+            font-family: monospace;
+            resize: none;
+            line-height: 1.5;
+            overflow-y: auto;
+        }
+
+        [data-theme='dark'] .out-link {
+            color: #86efac;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="card">
+            <h1>长链接生成器</h1>
+            <div class="row">
+                <input
+                    id="inputUrl"
+                    type="url"
+                    placeholder="https://example.com"
+                    class="url-input" />
+                <button onclick="generateLongLink()" class="x-a-btn">生成长链接</button>
+            </div>
+
+            <div id="output" style="display: none;" class="out">
+                <textarea id="shortUrl" readonly class="out-link" rows="2"></textarea>
+                <div class="controls">
+                    <button onclick="copyToClipboard()" class="secondary x-s-btn">复制</button>
+                    <button onclick="openLink()" class="x-a-btn">打开</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inputUrl = '';
+        let shortUrl = '';
+        let errorMsg = '';
+
+        // Base2 编码函数 (0 -> i, 1 -> I)
+        function encodeToBase2(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+            let binaryString = '';
+
+            for (let i = 0; i < data.length; i++) {
+                binaryString += data[i].toString(2).padStart(8, '0');
+            }
+
+            return binaryString.replace(/0/g, 'i').replace(/1/g, 'I');
+        }
+
+        const generateLongLink = () => {
+            errorMsg = '';
+            inputUrl = document.getElementById('inputUrl').value.trim();
+
+            if (!inputUrl) {
+                alert('错误: 无效的 url');
+                shortUrl = '';
+                document.getElementById('output').style.display = 'none';
+                return;
+            }
+
+            if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
+                inputUrl = 'http://' + inputUrl;
+            }
+
+            try {
+                const encodedUrl = encodeToBase2(inputUrl);
+                shortUrl = `https://lu.yik.at/${encodedUrl}`;
+                document.getElementById('shortUrl').value = shortUrl;
+                document.getElementById('output').style.display = 'flex';
+                alert('长链接生成成功！');
+            } catch {
+                alert('错误: 无效的 url');
+                console.error('Encoding error');
+                shortUrl = '';
+                document.getElementById('output').style.display = 'none';
+            }
+        };
+
+        const copyToClipboard = async () => {
+            try {
+                await navigator.clipboard.writeText(shortUrl);
+                alert('已复制到剪贴板');
+            } catch {
+                const input = document.createElement('input');
+                input.value = shortUrl;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                alert('已复制到剪贴板');
+            }
+        };
+
+        const openLink = () => {
+            if (shortUrl) {
+                window.open(shortUrl, '_blank');
+            }
+        };
+
+        // 回车键触发生成
+        document.getElementById('inputUrl').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                generateLongLink();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -417,7 +417,7 @@ const uploadFiles = async () => {
         processedFilename
       );
 
-      const response = await axios.post(`https://api.tio.ooo/api/github/upload-file`, {
+      const response = await axios.post(`https://api.tiouo.xyz/api/github/upload-file`, {
         token: githubToken.value.trim(),
         repo: repoName.value.trim(),
         branch: branch.value.trim() || 'main',

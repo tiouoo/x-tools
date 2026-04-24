@@ -60,7 +60,7 @@ const generateLongLink = () => {
 
   try {
     const encodedUrl = encodeToBase2(longUrl);
-    shortUrl.value = `https://lu.yik.at/${encodedUrl}`;
+    shortUrl.value = `https://lu.tiouo.xyz/${encodedUrl}`;
     message.success('长链接生成成功！');
   } catch {
     message.error('错误: 无效的 url');

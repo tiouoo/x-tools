@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title">
-      <span @click="toHome">x.tio.ooo</span>
+      <span @click="toHome">x.tiouo.xyz</span>
       <template v-if="currentPath !== '/'">
         <span class="path-separator">/</span>
         <span class="page-info"
