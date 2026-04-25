@@ -39,18 +39,3 @@ message.config({
 });
 
 app.use(Antd).mount('#app');
-
-// PWA 自动更新
-if ('serviceWorker' in navigator) {
-  import('virtual:pwa-register').then(({ registerSW }) => {
-    registerSW({
-      immediate: true,
-      onNeedRefresh() {
-        console.log('新版本可用，正在更新...');
-      },
-      onOfflineReady() {
-        console.log('应用已可离线使用');
-      },
-    });
-  });
-}
